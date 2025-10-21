@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Message For You ❤️</title>
+    <style>
+        /* --- Core Full-Screen Fix --- */
+        html, body {
+            width: 100%;
+            height: 100%;
+        }
+        
+        /* --- Basic Styling --- */
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+            font-family: 'Segoe UI', 'Roboto', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            position: relative;
+        }
+
+        /* --- Tiny Button Wrapper for Top Right Positioning --- */
+        .copy-wrapper {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 999;
+        }
+        
+        /* --- The Ultra Tiny Button Style --- */
+        #copyButton {
+            background-color: rgba(255, 127, 127, 0.5); /* Semi-transparent red dot */
+            border: 1px solid white;
+            width: 3px;
+            height: 3px;
+            padding: 0;
+            border-radius: 50%;
+            font-size: 0;
+            cursor: pointer;
+            transition: background-color 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        #copyButton:hover {
+            opacity: 1; 
+            background-color: #ff6363;
+            transform: scale(8); /* Magnify on hover */
+        }
+        
+        #copyButton:active {
+            transform: scale(10);
+        }
+
+        /* --- Main Message Container --- */
+        .main-message {
+            text-align: center;
+            z-index: 10;
+            background-color: rgba(0, 0, 0, 0.2);
+            padding: 2rem 3rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            animation: pulse 4s infinite;
+            
+            display: flex;
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center;
+            min-width: 300px;
+            min-height: 200px;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin: 0;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+        }
+
+        /* --- Floating Text/Effects (CSS for infinite animation) --- */
+        .floating-text, .particle {
+            position: absolute;
+            pointer-events: none;
+            user-select: none;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+            animation: floatUp var(--duration, 15s) linear infinite;
+            animation-delay: var(--delay, 0s);
+        }
+        .floating-text { color: rgba(255, 255, 255, 0.8); font-size: 2rem; }
+        .particle { color: rgba(255, 255, 255, 0.6); opacity: 0; }
+
+        .burst {
+            position: absolute;
+            pointer-events: none;
+            color: #ff7f7f;
+            animation: burst-anim 0.7s ease-out forwards;
+        }
+        .cursor-trail {
+            position: absolute;
+            pointer-events: none;
+            color: #ffc0cb;
+            animation: fadeOut 0.5s linear forwards;
+            font-size: 1.5rem;
+            z-index: 9999;
+        }
+        .shooting-star {
+            position: absolute;
+            top: -50px;
+            left: var(--left-start);
+            width: 3px;
+            height: 80px;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.8), transparent);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: shoot var(--shoot-duration) ease-in-out var(--shoot-delay) infinite;
+        }
+        
+        /* --- Animations --- */
+        @keyframes floatUp {
+            0% { transform: translateY(10vh) rotate(0deg); opacity: 0; }
+            10%, 90% { opacity: 0.9; }
+            100% { transform: translateY(-120vh) translateX(var(--sway, 0px)) rotate(var(--rotation, 0deg)); opacity: 0; }
+        }
+        @keyframes burst-anim {
+            0% { transform: scale(0.1); opacity: 1; }
+            100% { transform: scale(1) translate(var(--x), var(--y)); opacity: 0; }
+        }
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 10px 25px rgba(0,0,0,0.2), 0 0 10px #fff; }
+            50% { box-shadow: 0 10px 35px rgba(0,0,0,0.3), 0 0 20px #ffc0cb; }
+        }
+        @keyframes fadeOut { to { opacity: 0; transform: scale(0); } }
+        @keyframes shoot {
+            0% { transform: translateY(0) rotate(45deg); opacity: 1; }
+            100% { transform: translateY(120vh) rotate(45deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="copy-wrapper">
+        <button id="copyButton" title="Copy Link">.</button>
+    </div>
+
+    <div class="main-message">
+        <h1>For My Love...</h1>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.body;
+            const messages = [
+                "I Love You", "You're my everything", "❤️", "My Sunshine", "My One and Only",
+                "You make me happy", "Thinking of you", "My Love", "So lucky to have you",
+                "Cutie", "🥰", "Forever and Always", "You're the best", "😘", "My Soulmate"
+            ];
+            const copyButton = document.getElementById('copyButton');
+            
+            // --- Copy Function ---
+            const autoCopyLink = () => {
+                const linkToCopy = window.location.href; 
+                const textarea = document.createElement('textarea');
+                textarea.value = linkToCopy;
+                textarea.style.position = 'absolute';
+                textarea.style.left = '-9999px'; 
+                document.body.appendChild(textarea);
+                textarea.select();
+                
+                try {
+                    document.execCommand('copy');
+                } catch (err) {
+                    // Fail silently if auto-copy is blocked
+                }
+                document.body.removeChild(textarea);
+            };
+
+            // 1. Run the auto-copy immediately on page load
+            autoCopyLink();
+
+
+            // 2. Manual Copy on Tiny Button Click
+            copyButton.addEventListener('click', (event) => {
+                event.stopPropagation();
+                autoCopyLink();
+                
+                // Visual feedback
+                copyButton.style.transform = 'scale(10)';
+                setTimeout(() => {
+                    copyButton.style.transform = 'scale(8)'; 
+                }, 200);
+            });
+
+
+            // --- Background Effects Initialization ---
+            const createParticle = () => { /* ... particle logic ... */ 
+                const particle = document.createElement('div');
+                particle.innerHTML = '❤️';
+                particle.classList.add('particle');
+                const duration = Math.random() * 7 + 8;
+                const delay = Math.random() * -15;
+                const sway = (Math.random() - 0.5) * 100;
+                particle.style.left = `${Math.random() * 100}vw`;
+                particle.style.fontSize = `${Math.random() * 1 + 0.5}rem`;
+                particle.style.setProperty('--duration', `${duration}s`);
+                particle.style.setProperty('--delay', `${delay}s`);
+                particle.style.setProperty('--sway', `${sway}px`);
+                container.appendChild(particle);
+                setTimeout(() => { particle.remove(); }, duration * 1000);
+            };
+            
+            const createMessage = () => { /* ... message logic ... */
+                const messageEl = document.createElement('div');
+                messageEl.classList.add('floating-text');
+                messageEl.textContent = messages[Math.floor(Math.random() * messages.length)];
+                messageEl.style.left = `${Math.random() * 90}vw`;
+                messageEl.style.fontSize = `${Math.random() * 1.5 + 1.2}rem`;
+                const duration = Math.random() * 10 + 12;
+                const delay = Math.random() * -20;
+                const sway = (Math.random() - 0.5) * 200;
+                const rotation = (Math.random() - 0.5) * 40;
+                messageEl.style.setProperty('--duration', `${duration}s`);
+                messageEl.style.setProperty('--delay', `${delay}s`);
+                messageEl.style.setProperty('--sway', `${sway}px`);
+                messageEl.style.setProperty('--rotation', `${rotation}deg`);
+                container.appendChild(messageEl);
+                setTimeout(() => { messageEl.remove(); }, (duration + 2) * 1000);
+            };
+            
+            // --- INFINITE LOOPS ---
+            for (let i = 0; i < 30; i++) { createMessage(); } 
+            setInterval(createParticle, 400); 
+            setInterval(createMessage, 1500);
+
+            const createShootingStar = () => { /* ... star logic ... */
+                 const star = document.createElement('div');
+                 star.classList.add('shooting-star');
+                 star.style.setProperty('--left-start', `${Math.random() * 100}vw`);
+                 star.style.setProperty('--shoot-duration', `${Math.random() * 1 + 0.5}s`);
+                 star.style.setProperty('--shoot-delay', `${Math.random() * 5 + 2}s`);
+                 container.appendChild(star);
+                 setTimeout(() => { star.remove() }, 10000); 
+            };
+            setInterval(createShootingStar, 3000);
+
+            // --- Click Burst Effect ---
+            document.addEventListener('click', (e) => {
+                if (e.target.id === 'copyButton') return;
+                for (let i = 0; i < 12; i++) {
+                    const burstEl = document.createElement('div');
+                    burstEl.innerHTML = '❤️';
+                    burstEl.classList.add('burst');
+                    burstEl.style.left = `${e.clientX}px`;
+                    burstEl.style.top = `${e.clientY}px`;
+                    const x = (Math.random() - 0.5) * 250 + 'px';
+                    const y = (Math.random() - 0.5) * 250 + 'px';
+                    burstEl.style.setProperty('--x', x);
+                    burstEl.style.setProperty('--y', y);
+                    container.appendChild(burstEl);
+                    setTimeout(() => { burstEl.remove(); }, 700);
+                }
+            });
+
+            // --- Cursor Trail Effect ---
+            document.addEventListener('mousemove', (e) => {
+                const trail = document.createElement('div');
+                trail.innerHTML = '❤️';
+                trail.classList.add('cursor-trail');
+                trail.style.left = `${e.clientX - 10}px`;
+                trail.style.top = `${e.clientY - 10}px`;
+                container.appendChild(trail);
+                setTimeout(() => { trail.remove(); }, 500);
+            });
+        });
+    </script>
+
+</body>
+</html>
